@@ -57,7 +57,7 @@ app.use((req, res, next) => {
   return next();
 });
 
-app.use('/api/v1', require('./routes/v1'));
+app.use('/api', require('./routes/v1'));
 
 app.use((req, res, next) => {
   return next(createError(404));
