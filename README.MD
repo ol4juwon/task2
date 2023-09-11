@@ -3,6 +3,7 @@
 - Nodejs (12.x)
 - MongoDB
 - Expressjs
+- Postman Documentation
 ## Endpoints
 - Users [/users]
   1. Create User [POST][/]
@@ -29,6 +30,8 @@
 - Download the code from github (Main branch)
 - npm i to install dependencies
 - npm start to  start application
+- create .env file and specify the variables specified in the env sections.
+- use the post man doc to test the app
 
 ## Environment Variables
 - NODE_ENV
