@@ -28,4 +28,4 @@ schema.post('save', function(user) {
 
 schema.index({"$**": "text", _id: "text"});
 schema.plugin(mongoosePaginate);
-module.exports = mongoose.model("users", schema);
+module.exports = mongoose.model("person", schema);

@@ -1,5 +1,5 @@
 const { default: mongoose } = require("mongoose");
-const Users = require("./users.model");
+const Users = require("./person.model");
 
 exports.create = async ({ name}) => {
   try {
@@ -10,10 +10,11 @@ exports.create = async ({ name}) => {
     console.log({ response });
     const da = await response.save();
     console.log({ da });
-    if (response) return { data: response };
+    const person = {id: response.id, name: response.name}
+    if (response) return { data: person };
   } catch (e) {
     if (e.message.includes("duplicate")) {
-      return { error: "duplicate user with name", code: 422 };
+      return { error: "duplicate person with name", code: 422 };
     }
     return { error: "Creation failed", code: 500};
   }
@@ -23,7 +24,9 @@ exports.read = async (keyword) => {
     let query ;
 if(mongoose.isValidObjectId(keyword)){
   const response = await Users.findById(keyword);
-  return {data: response, code: 200}
+  if(!response) return {error: "User not found", code: 404};
+  const{id, name} = response;
+  return {data: {id, name}, code: 200}
 }
     const regex = new RegExp(keyword, 'i');
     const response = await Users.find({
@@ -32,13 +35,14 @@ if(mongoose.isValidObjectId(keyword)){
         ]
        });
     if (!response) return { error: "not found", code: 404 };
-    return { data: response[0], code: 200 };
+    const{id, name} = response[0];
+    return { data: {id, name}, code: 200 };
   } catch (e) {
     if (e.message.includes("Cast to ObjectId")) {
         console.log(e.message)
-      return { error: "invalid user id " + keyword, code: 422 };
+      return { error: "invalid person id " + keyword, code: 422 };
     }
-    return { error: e.message };
+    return { error: "internal server error" };
   }
 };
 
@@ -50,21 +54,21 @@ exports.update = async (id, payload) => {
     return { data: response };
   } catch (e) {
     if (e.message.includes("Cast to ObjectId")) {
-        return { error: "invalid user id " + id, code: 422 };
+        return { error: "invalid person id " + id, code: 422 };
       }
-    return { error: e.message };
+    return { error: "update failed" };
   }
 };
 
 exports.delete = async (id) => {
   try {
     const response = await Users.findOneAndDelete({ _id: id });
-    if (response) return { data: "ok" };
+    if (response) return { data: "Person deleted" };
     return { error: "failed" };
   } catch (e) {
     if (e.message.includes("Cast to ObjectId")) {
         return { error: "invalid user id " + id, code: 422 };
       }
-    return { error: e.message };
+    return { error: "delete failed" };
   }
 };
