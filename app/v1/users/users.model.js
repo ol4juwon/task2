@@ -5,10 +5,7 @@ let mongoosePaginate = require('mongoose-paginate');
 
 const schema = mongoose.Schema({
     name: {type: String, required: true, index: true},
-    username: {type: String, required: true, unique: true},
-    email: {type: String , index: true, unique: true, required: true},
-    age: {type: String, index: true, required: true},
-    track: {type: String, index: true, required: true},
+
 
 
 }, {
@@ -17,6 +14,8 @@ const schema = mongoose.Schema({
             ret.id = ret._id;
             delete ret.__v;
             delete ret._id;
+            delete ret.createdAt;
+            delete ret.updatedAt;
         }
     },
     timestamps: true

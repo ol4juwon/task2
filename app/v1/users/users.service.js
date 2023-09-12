@@ -1,8 +1,11 @@
 const Users = require("./users.model");
 
-exports.create = async ({ name, email, username, age, track }) => {
+exports.create = async ({ name}) => {
   try {
-    const response = new Users({ name, email, username, age, track });
+    const isExist = await Users.findOne({name});
+    console.log({isExist})
+    if(isExist) return {error: "name already exists"};
+    const response = new Users({ name});
     console.log({ response });
     const da = await response.save();
     console.log({ da });
@@ -19,11 +22,9 @@ exports.read = async (id) => {
 
     const regex = new RegExp(`%${id}%`, 'i');
     const response = await Users.find({$text : {$search: regex}});
-    console.log("ee", { response });
     if (!response) return { error: "not found", code: 404 };
     return { data: response, code: 200 };
   } catch (e) {
-    console.log("33", e);
     if (e.message.includes("Cast to ObjectId")) {
       return { error: "invalid user id " + id, code: 422 };
     }
@@ -48,7 +49,6 @@ exports.update = async (id, payload) => {
 exports.delete = async (id) => {
   try {
     const response = await Users.findOneAndDelete({ _id: id });
-    console.log({ response });
     if (response) return { data: "ok" };
     return { error: "failed" };
   } catch (e) {

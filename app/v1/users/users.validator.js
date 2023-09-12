@@ -7,10 +7,7 @@ exports.create = ( req,res,next) => {
 console.log("Before Validating ===> ", req.body)
     const schema = Joi.object( {
         name: Joi.string().min(4).required(),
-        username: Joi.string().required(),
-        track : Joi.string().required(),
-        email: Joi.string().min(6).required().email(),
-        age: Joi.string().required(),
+
        
     })
 
