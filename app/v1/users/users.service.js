@@ -20,12 +20,19 @@ exports.create = async ({ name}) => {
 exports.read = async (id) => {
   try {
 
-    const regex = new RegExp(`%${id}%`, 'i');
-    const response = await Users.find({$text : {$search: regex}});
+    const regex = new RegExp(id, 'i');
+    const response = await Users.find({
+        $or:[
+            {$text : {$search: regex}},
+            {_id: id }
+
+        ]
+       });
     if (!response) return { error: "not found", code: 404 };
-    return { data: response, code: 200 };
+    return { data: response[0], code: 200 };
   } catch (e) {
     if (e.message.includes("Cast to ObjectId")) {
+        console.log(e.message)
       return { error: "invalid user id " + id, code: 422 };
     }
     return { error: e.message };

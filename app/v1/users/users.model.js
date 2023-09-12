@@ -26,6 +26,6 @@ schema.post('save', function(user) {
 
 });
 
-schema.index({"$**": "text"});
+schema.index({"$**": "text", _id: "text"});
 schema.plugin(mongoosePaginate);
 module.exports = mongoose.model("users", schema);
