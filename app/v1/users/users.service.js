@@ -16,7 +16,9 @@ exports.create = async ({ name, email, username, age, track }) => {
 };
 exports.read = async (id) => {
   try {
-    const response = await Users.findById(id);
+
+    const regex = new RegExp(`%${id}%`, 'i');
+    const response = await Users.find({$text : {$search: regex}});
     console.log("ee", { response });
     if (!response) return { error: "not found", code: 404 };
     return { data: response, code: 200 };
