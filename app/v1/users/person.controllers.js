@@ -47,5 +47,5 @@ exports.delete = async (req, res) => {
   if (error) {
     return res.status(400).json({ error });
   }
-  return res.status(204).send();
+  return res.status(200).json({message: "person deleted successfully"});
 };
