@@ -22,7 +22,8 @@ exports.read = async (req, res) => {
     }
     return res.status(200).json(data);
   } catch (e) {
-    return res.status(500).json({ error: "internal server error" });
+    console.log(e.message)
+    return res.status(500).json({ error: "internal sejrver error" });
   }
 };
 

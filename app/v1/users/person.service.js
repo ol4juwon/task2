@@ -25,23 +25,21 @@ exports.read = async (keyword) => {
 if(mongoose.isValidObjectId(keyword)){
   const response = await Users.findById(keyword);
   if(!response) return {error: "User not found", code: 404};
-  const{id, name} = response;
-  return {data: {id, name}, code: 200}
+  const{_id, name} = response;
+  return {data: {id: _id, name}, code: 200}
 }
     const regex = new RegExp(keyword, 'i');
-    const response = await Users.find({
-        $or:[
-            {$text : {$search: regex}},
-        ]
-       });
+    const response = await Users.findOne({name: keyword});
     if (!response) return { error: "not found", code: 404 };
-    const{id, name} = response[0];
-    return { data: {id, name}, code: 200 };
+    console.log(response);
+    const{_id, name} = response;
+    return { data: {id: _id, name}, code: 200 };
   } catch (e) {
     if (e.message.includes("Cast to ObjectId")) {
         console.log(e.message)
       return { error: "invalid person id " + keyword, code: 422 };
     }
+    console.log(e.message)
     return { error: "internal server error" };
   }
 };
