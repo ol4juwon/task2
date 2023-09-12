@@ -12,7 +12,7 @@ exports.create = async ({ name}) => {
     if (response) return { data: response };
   } catch (e) {
     if (e.message.includes("duplicate")) {
-      return { error: "duplicate user with email exists", code: 422 };
+      return { error: "duplicate user with name", code: 422 };
     }
     return { error: "Creation failed", code: 500};
   }
