@@ -1,3 +1,4 @@
+const { default: mongoose } = require("mongoose");
 const Users = require("./users.model");
 
 exports.create = async ({ name}) => {
@@ -17,15 +18,17 @@ exports.create = async ({ name}) => {
     return { error: "Creation failed", code: 500};
   }
 };
-exports.read = async (id) => {
+exports.read = async (keyword) => {
   try {
-
-    const regex = new RegExp(id, 'i');
+    let query ;
+if(mongoose.isValidObjectId(keyword)){
+  const response = await Users.findById(keyword);
+  return {data: response, code: 200}
+}
+    const regex = new RegExp(keyword, 'i');
     const response = await Users.find({
         $or:[
             {$text : {$search: regex}},
-            {_id: id }
-
         ]
        });
     if (!response) return { error: "not found", code: 404 };
@@ -33,7 +36,7 @@ exports.read = async (id) => {
   } catch (e) {
     if (e.message.includes("Cast to ObjectId")) {
         console.log(e.message)
-      return { error: "invalid user id " + id, code: 422 };
+      return { error: "invalid user id " + keyword, code: 422 };
     }
     return { error: e.message };
   }
